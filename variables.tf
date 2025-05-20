@@ -6,8 +6,8 @@ variable "cloudngfws" {
 
   - `name`                            - (`string`, required) the name of the Palo Alto Next Generation Firewall instance.
   - `attachment_type`                 - (`string`, required) specifies whether the firewall is attached to a Virtual Network
-  - `resource_group_name`         - (`string`, required) the name of the Resource Group where the firewall will be created.
-  - `resource_group_name_network`     - (`string`, required) the name of the Resource Group where the Virtual Network is located.
+  - `resource_group_name_key`         - (`string`, required) the name of the Resource Group where the firewall will be created.
+  - `resource_group_name_network_key`     - (`string`, required) the name of the Resource Group where the Virtual Network is located.
                                         (`vnet`) or a Virtual WAN (`vwan`).
   - `virtual_network_key`             - (`string`, optional) key referencing the Virtual Network associated with this firewall.
                                         Required if the `attachment_type` is `vnet`.
@@ -56,8 +56,8 @@ variable "cloudngfws" {
   type = map(object({
     name                        = string
     attachment_type             = string
-    resource_group_name         = string
-    resource_group_name_network = string
+    resource_group_name_key         = string
+    resource_group_name_network_key = string
     virtual_network_key         = optional(string)
     untrusted_subnet_key        = optional(string)
     trusted_subnet_key          = optional(string)
