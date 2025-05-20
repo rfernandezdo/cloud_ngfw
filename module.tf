@@ -35,5 +35,5 @@ module "swfw-modules_cloudngfw" {
     }
   })
 
-  tags = var.tags
+  tags = each.value.tags
 }
