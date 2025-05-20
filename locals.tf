@@ -7,7 +7,7 @@ locals {
         try(fw.cloudngfw_config.egress_nat_ip_keys, [])
         )) : {
         key = k
-        rg  = data.resource_group_network[fw_key].name
+        rg  = data.azurerm_resource_group.resource_group_network[fw_key].name
       }
     ]
   ])
