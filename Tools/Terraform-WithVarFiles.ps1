@@ -44,7 +44,7 @@ function Terraform-WithVarFiles {
         return
     }
 
-    $varFiles = Get-ChildItem -Path $Dir -Filter *.tfvars | ForEach-Object { "--var-file $_" }
+    $varFiles = Get-ChildItem -Path $Dir -Filter *.tfvars | ForEach-Object { "--var-file $_.FullName" }
 
     if ($varFiles.Count -eq 0) {
         Write-Error "No .tfvars files found in the specified directory."
