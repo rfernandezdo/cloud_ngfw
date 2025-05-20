@@ -54,15 +54,15 @@ variable "cloudngfws" {
 
   EOF
   type = map(object({
-    name                        = string
-    attachment_type             = string
+    name                            = string
+    attachment_type                 = string
     resource_group_name_key         = string
     resource_group_name_network_key = string
-    virtual_network_key         = optional(string)
-    untrusted_subnet_key        = optional(string)
-    trusted_subnet_key          = optional(string)
-    virtual_hub_key             = optional(string)
-    management_mode             = string
+    virtual_network_key             = optional(string)
+    untrusted_subnet_key            = optional(string)
+    trusted_subnet_key              = optional(string)
+    virtual_hub_key                 = optional(string)
+    management_mode                 = string
     cloudngfw_config = object({
       plan_id                       = optional(string)
       marketplace_offer_id          = optional(string)
