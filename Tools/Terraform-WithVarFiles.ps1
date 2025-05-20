@@ -44,7 +44,7 @@ function Terraform-WithVarFiles {
         return
     }
 
-    $varFiles = Get-ChildItem -Path $Dir -Filter *.tfvars | ForEach-Object { "--var-file $_.FullName" }
+    $varFiles = Get-ChildItem -Path $Dir -Filter *.tfvars | ForEach-Object { "--var-file $_" }
 
     if ($varFiles.Count -eq 0) {
         Write-Error "No .tfvars files found in the specified directory."
@@ -72,7 +72,7 @@ function Terraform-WithVarFiles {
         return
     }
 
-    $command = "terraform $Action $($varFiles -join ' ')"
+    $command = "terraform $Action `"$($varFiles -join ' ')`""
 
     if ($Action -eq "import") {
         if (-not $ResourceAddress -or -not $ResourceId) {
