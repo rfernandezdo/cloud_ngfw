@@ -41,3 +41,26 @@
 ## Outputs
 
 No outputs.
+
+## Sincronización automática de la carpeta Tools
+
+Para mantener el contenido de la carpeta `Tools` actualizado desde el repositorio externo, ejecuta el siguiente script después de clonar o hacer pull:
+
+```bash
+bash sync_tools.sh
+```
+
+Esto descargará y sincronizará automáticamente el contenido de la carpeta `Tools` desde [terraform_tools/Tools](https://github.com/rfernandezdo/terraform_tools/tree/main/Tools).
+
+Si quieres automatizarlo aún más, puedes crear un hook de git (`.git/hooks/post-merge` y `.git/hooks/post-checkout`) con este contenido:
+
+```bash
+#!/bin/bash
+bash "$(git rev-parse --show-toplevel)/sync_tools.sh"
+```
+
+No olvides dar permisos de ejecución al script y a los hooks:
+
+```bash
+chmod +x sync_tools.sh .git/hooks/post-merge .git/hooks/post-checkout
+```
