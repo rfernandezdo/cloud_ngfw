@@ -7,8 +7,11 @@ variable "cloudngfws" {
   - `name`                            - (`string`, required) the name of the Palo Alto Next Generation Firewall instance.
   - `attachment_type`                 - (`string`, required) specifies whether the firewall is attached to a Virtual Network
   - `resource_group_name_key`         - (`string`, required) the name of the Resource Group where the firewall will be created.
-  - `resource_group_name_network_key`     - (`string`, required) the name of the Resource Group where the Virtual Network is located.
+  - `resource_group_name_network_key` - (`string`, required) the name of the Resource Group where the Virtual Network is located.
                                         (`vnet`) or a Virtual WAN (`vwan`).
+  - `resource_group_name_pip_key`     - (`string`, optional) the name of the Resource Group where the Public IP resource is located if is different from the
+                                        Resource Group of the Virtual Network.
+                                        This is used only when the variable `public_ip_keys` is utilized.
   - `virtual_network_key`             - (`string`, optional) key referencing the Virtual Network associated with this firewall.
                                         Required if the `attachment_type` is `vnet`.
   - `untrusted_subnet_key`            - (`string`, optional) key of the subnet designated as untrusted within the Virtual Network.
@@ -57,7 +60,8 @@ variable "cloudngfws" {
     name                            = string
     attachment_type                 = string
     resource_group_name_key         = string
-    resource_group_name_network_key = string
+    resource_group_name_network_key = optional(string)
+    resource_group_name_pip_key     = optional(string)
     virtual_network_key             = optional(string)
     untrusted_subnet_key            = optional(string)
     trusted_subnet_key              = optional(string)
@@ -68,7 +72,7 @@ variable "cloudngfws" {
       marketplace_offer_id          = optional(string)
       panorama_base64_config        = optional(string)
       rulestack_id                  = optional(string)
-      create_public_ip              = optional(bool, true)
+      create_public_ip              = optional(bool, false)
       public_ip_name                = optional(string)
       public_ip_resource_group_name = optional(string)
       public_ip_keys                = optional(list(string))

@@ -9,6 +9,11 @@ data "azurerm_resource_group" "resource_group_network" {
   name     = each.value.resource_group_name_network_key
 }
 
+data "azurerm_resource_group" "resource_group_pip" {
+  for_each = var.cloudngfws
+  name     = each.value.resource_group_name_pip_key
+}
+
 data "azurerm_public_ip" "pip" {
   for_each            = toset(local.all_public_ip_keys)
   name                = each.key
