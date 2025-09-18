@@ -89,4 +89,87 @@ variable "cloudngfws" {
     })
     tags = optional(map(string))
   }))
+
+  // Validación: cada firewall debe tener al menos una IP asociada (creada o existente)
+  validation {
+    condition = alltrue([
+      for _, fw in var.cloudngfws : (
+        length(concat(
+          try(fw.cloudngfw_config.public_ip_keys, []),
+          try(fw.cloudngfw_config.egress_nat_ip_keys, [])
+        )) > 0
+        || try(fw.cloudngfw_config.create_public_ip, false)
+        || length([
+          for _, dn in try(fw.cloudngfw_config.destination_nats, {}) : dn
+          if try(dn.frontend_public_ip_key, null) != null
+        ]) > 0
+      )
+    ])
+    error_message = "Cada firewall (cloudngfw) debe definir al menos una IP pública: public_ip_keys, egress_nat_ip_keys, create_public_ip=true o destination_nats con frontend_public_ip_key."
+  }
+}
+
+variable "public_ips" {
+  description = <<-EOF
+  A map defining Public IP Addresses and Prefixes for DNAT purposes.
+
+  Following properties are available:
+
+  - `public_ip_addresses` - (`map`, optional) map of objects describing Public IP Addresses
+  - `public_ip_prefixes`  - (`map`, optional) map of objects describing Public IP Prefixes
+
+  Example:
+  ```
+  public_ips = {
+    public_ip_addresses = {
+      "https-dnat-ip" = {
+        create = true
+        name   = "dnat-https-pip"
+        resource_group_name = "my-rg"
+      }
+    }
+    public_ip_prefixes = {}
+  }
+  ```
+  EOF
+  default = {
+    public_ip_addresses = {}
+    public_ip_prefixes = {}
+  }
+  type = object({
+    public_ip_addresses = optional(map(object({
+      create                     = bool
+      name                       = string
+      resource_group_name        = optional(string)
+      zones                      = optional(list(string))
+      domain_name_label          = optional(string)
+      idle_timeout_in_minutes    = optional(number)
+      prefix_name                = optional(string)
+      prefix_resource_group_name = optional(string)
+      prefix_id                  = optional(string)
+    })), {})
+    public_ip_prefixes = optional(map(object({
+      create              = bool
+      name                = string
+      resource_group_name = optional(string)
+      zones               = optional(list(string))
+      length              = optional(number)
+    })), {})
+  })
+}
+
+variable "external_public_ips" {
+  description = <<-EOF
+  A map of objects defining external public IP addresses that are created outside this module.
+  These IPs are referenced by their key and the module will look them up in the specified resource group.
+
+  Each entry supports the following attributes:
+  - `name`                - (`string`, required) the name of the existing Public IP resource.
+  - `resource_group_name` - (`string`, required) the name of the Resource Group where the Public IP is located.
+  EOF
+  type = map(object({
+    name                = string
+    resource_group_name = string
+  }))
+  default = {}
 }
