@@ -10,7 +10,14 @@ module "public_ip" {
   region              = each.key
   public_ip_addresses = each.value.public_ip_addresses
   public_ip_prefixes  = each.value.public_ip_prefixes
-  tags                = {}
+  tags                = merge(
+    # Tags adicionales que se pueden heredar de la primera IP de la región
+    try(length(each.value.public_ip_addresses) > 0 ? 
+      values(each.value.public_ip_addresses)[0].tags : {}, {}),
+    # Si no hay IPs addresses, intentar con prefixes
+    try(length(each.value.public_ip_addresses) == 0 && length(each.value.public_ip_prefixes) > 0 ? 
+      values(each.value.public_ip_prefixes)[0].tags : {}, {})
+  )
 }
 
 # trunk-ignore(checkov/CKV_TF_1)

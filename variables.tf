@@ -147,6 +147,7 @@ variable "public_ips" {
       prefix_name                = optional(string)
       prefix_resource_group_name = optional(string)
       prefix_id                  = optional(string)
+      tags                       = optional(map(string))
     })), {})
     public_ip_prefixes = optional(map(object({
       create              = bool
@@ -154,6 +155,7 @@ variable "public_ips" {
       resource_group_name = optional(string)
       zones               = optional(list(string))
       length              = optional(number)
+      tags                = optional(map(string))
     })), {})
   })
 }
